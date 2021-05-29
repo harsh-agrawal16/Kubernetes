@@ -49,4 +49,7 @@ Basic commands to deal with deployments
 ```
 kubectl create -f deployment deployment-defintion.yaml
 kubectl get deployments 
+kubectl describe deployments frontend-deployment | grep -i image
+kubectl apply -f deployment-defintion.yaml
 ```
+
