@@ -53,3 +53,52 @@ kubectl describe deployments frontend-deployment | grep -i image
 kubectl apply -f deployment-defintion.yaml
 ```
 
+Creating a deployment from the command line without using the kubernetes definition file. 
+
+```
+kubectl create deployment httpd-frontend --image=httpd:2.4-alpine
+kubectl scale deployment --replicas=3 httpd-frontend
+
+```
+
+### Updates and Rollback in a deployment
+
+Rollout and Versioning
+
+When you first create a deployment, it triggers a rollout, a new roolout creates a new deployment revision, say Revision 1.
+In the future, when the application is upgraded, meaning when the container version is updated to a new one, a new rollout is triggered and a new deployment revision is created, say Revision 2. 
+This helps us to keep track of the changes made to the deployment and rollback to a previous deployment is needed in the future.
+
+This command gives you the status of the current rollout.
+```
+kubectl rollout status deployment/myapp-deployment
+```
+
+This command gives the revisions and the history of the rollout.
+```
+kubectl rollout history deployment/myapp-deployment
+```
+
+Deployment Strategies : Recreate and Rolling update.
+
+### Update deployments
+
+```
+kubectl apply -f deployment-definition.yaml
+```
+
+This updates the image of the deployment but it results in having a definition file with a different configuration.
+```
+kubectl set image deployment/myapp-deployment nginx=nginx:1.9.1
+```
+
+What happens under the hood during a rolling upgrade ?
+1. A new replica set is created. 
+2. New pods are created in the new replicaset while simultaneously killing old pods in the old replicaset.
+
+
+### Rollback
+
+```
+kubectl rollout undo deployment/myapp-deployment
+```
