@@ -1,0 +1,60 @@
+#There are three kinds of services in k8s. 
+# Nodeport
+# ClusterIP
+# Load Balancer
+
+#A service can span across multiple nodes. It can manage pods with the same label on the same node or pods dostributed 
+#across various nodes
+# kubectl create -f service-definition.yaml 
+# The service can be accessed by the pods using the service name or the ClusterIP
+
+
+
+#Nodeport 
+
+apiVersion: v1
+kind: Service
+metadata: 
+  name: myapp-service
+spec:
+  type: NodePort
+  ports:
+    - port : 80
+      targetPort: 80
+      nodePort: 30002
+  selector:
+    app: myapp   
+
+
+#ClusterIP
+
+apiVersion: v1
+kind: Service
+metadata: 
+  name: myapp-service
+spec:
+  type: ClusterIP
+  ports:
+    - port : 80
+      targetPort: 80
+  selector:
+    app: myapp   
+    type: back-end
+
+
+#LoadBalancer
+
+apiVersion: v1
+kind: Service
+metadata: 
+  name: myapp-service
+spec:
+  type: LoadBalancer
+  ports:
+    - port : 80
+      targetPort: 80
+      nodePort: 30002
+  selector:
+    app: myapp   
+
+
