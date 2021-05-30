@@ -1,5 +1,10 @@
 # Kubernetes-
 
+1. Kubernetes Concepts : Pods, ReplicaSets, Deployment, Services
+2. Networking in Kubernetes
+3. Kubernetes Management - kubectl
+
+
 ## Pods:
 
 version : v1
@@ -125,3 +130,54 @@ Now edit the svc.yaml file , add the Nodeport
 
 kubectl apply -f svc.yaml
 ```
+
+NodePort is an external service while clusterIP is an internal service.
+
+
+## Deploying Microservices Application on Docker
+
+Example code in python on the voting app
+```
+def get_redis():
+    if not hasattr(g,'redis'):
+        g.redis= Redis(host='redis',db=0,socket_timeout=5)
+    return g.redis   
+```     
+
+Note : The -d flag ensures the execution happens in the background.
+```
+docker run -d --name=redis redis
+docker run -d --name=db postgres:9.4
+docker run -d --name=vote -p 5000:80 --link redis:redis voting-app
+
+# The above command creates an entry in the etc/hosts file on the voting app container
+
+docker run -d --name=result -p 5001:80 --link db:db result-app
+docker run -d --name=worker --link redis:redis --link db:db worker
+
+```
+
+## Deploying Microservices Application on Kubernetes
+
+Implemented this on a simple voting app.
+
+1. Deploy the pods ( voting-app-pod, redis-pod, worker-app-pod, postgres-pod, result-app-pod)
+2. Deploy the services (...)
+
+Services establishes the required connectivity between the pods.
+
+## Deploying Microservices Application on Kubernetes with Deployments
+
+Deploying our application just as pods has its own challenges.
+Deploying just pods doesn't help in scaling our application, or in updating the application.
+We choose deployments over replicasets as replica sets are automatically created with deployments.
+Deployment helps us perform rolling updates, revisions, rollback, etc.
+
+1. Create and deploy all the five deployments 
+2. Deploy the services
+
+Then we can further scale up or scale down the deployment using the kubectl scale command.
+```
+kubectl scale deployment voting-app-deploy --replicas=3
+```
+
