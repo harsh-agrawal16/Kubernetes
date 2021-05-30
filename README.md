@@ -102,3 +102,26 @@ What happens under the hood during a rolling upgrade ?
 ```
 kubectl rollout undo deployment/myapp-deployment
 ```
+
+## Services
+
+There are three kinds of services in k8s, namely
+1. NodePort
+2. ClusterIP
+3. Load Balancer
+
+basic commands
+
+```
+kubectl create -f service-definition-1.yml
+kubectl describe svc myapp-service | grep -i image
+```
+
+Another way to create a service without editing the service definition file
+```
+kubectl expose deployment simple-webapp-deployment --name=webapp-service --target-port=8080 --type=NodePort --port=8080 --dry-run=client -o yaml > svc.yaml
+
+Now edit the svc.yaml file , add the Nodeport
+
+kubectl apply -f svc.yaml
+```
